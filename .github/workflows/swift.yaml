@@ -28,6 +28,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install SwiftFormat
+        uses: Cyberbeni/install-swift-tool@v2
+        with:
+          url: https://github.com/nicklockwood/SwiftFormat
+
       - name: Format Swift code
         run: swiftformat --verbose .
 
