@@ -54,7 +54,7 @@ public extension Opus {
 		}
 
 		public func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
-			if input.format.sampleRate != format.sampleRate || input.format.channelCount != format.channelCount {
+			guard input.format.sampleRate == format.sampleRate, input.format.channelCount == format.channelCount else {
 				throw Opus.Error.badArg
 			}
 			switch format.commonFormat {
@@ -77,7 +77,7 @@ public extension Opus {
 				output.baseAddress!,
 				Int32(output.count)
 			)
-			if count <= 0 {
+			if count < 0 {
 				throw Opus.Error(count)
 			}
 			return Int(count)
@@ -91,7 +91,7 @@ public extension Opus {
 				output.baseAddress!,
 				Int32(output.count)
 			)
-			if count <= 0 {
+			if count < 0 {
 				throw Opus.Error(count)
 			}
 			return Int(count)
