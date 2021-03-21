@@ -79,30 +79,30 @@ extension Opus.Encoder {
 
 extension Opus.Encoder {
 	private func encode(_ input: UnsafeBufferPointer<Int16>, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
-		let count = opus_encode(
+		let encodedSize = opus_encode(
 			encoder,
 			input.baseAddress!,
 			Int32(input.count) / Int32(format.channelCount),
 			output.baseAddress!,
 			Int32(output.count)
 		)
-		if count < 0 {
-			throw Opus.Error(count)
+		if encodedSize < 0 {
+			throw Opus.Error(encodedSize)
 		}
-		return Int(count)
+		return Int(encodedSize)
 	}
 
 	private func encode(_ input: UnsafeBufferPointer<Float32>, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
-		let count = opus_encode_float(
+		let encodedSize = opus_encode_float(
 			encoder,
 			input.baseAddress!,
 			Int32(input.count) / Int32(format.channelCount),
 			output.baseAddress!,
 			Int32(output.count)
 		)
-		if count < 0 {
-			throw Opus.Error(count)
+		if encodedSize < 0 {
+			throw Opus.Error(encodedSize)
 		}
-		return Int(count)
+		return Int(encodedSize)
 	}
 }
