@@ -43,9 +43,11 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os:
+          - macos-latest
+          # - ubuntu-latest # Re-enable when (if?) AVFoundation is available on Linux.
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
