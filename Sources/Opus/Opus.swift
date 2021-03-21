@@ -58,21 +58,32 @@ public extension Opus {
 
 public extension Opus {
 	static func isValidFormat(_ format: AVAudioFormat) -> Bool {
-		switch format.commonFormat {
-		case .pcmFormatInt16, .pcmFormatFloat32:
-			break
-		default:
+		if format.sampleRate == 0 {
 			return false
 		}
-		if format.streamDescription.pointee.mFormatID != kAudioFormatLinearPCM {
-			return false
-		}
-		if format.channelCount == 0 || format.sampleRate == 0 {
+
+		if format.channelCount == 0 || format.channelCount > 2 {
 			return false
 		}
 		if format.channelCount > 1, !format.isInterleaved {
 			return false
 		}
+
+		if format.commonFormat == .pcmFormatInt16 || format.commonFormat == .pcmFormatFloat32 {
+			return true
+		}
+
+		let desc = format.streamDescription.pointee
+		if desc.mFormatID != kAudioFormatLinearPCM {
+			return false
+		}
+		if desc.mFormatFlags & kLinearPCMFormatFlagIsSignedInteger != 0, desc.mBitsPerChannel != 16 {
+			return false
+		}
+		if desc.mFormatFlags & kLinearPCMFormatFlagIsFloat != 0, desc.mBitsPerChannel != 32 {
+			return false
+		}
+
 		return true
 	}
 }
