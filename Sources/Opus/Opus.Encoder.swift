@@ -35,6 +35,16 @@ public extension Opus {
 			}
 		}
 
+		public func encode(_ input: AVAudioPCMBuffer, to output: inout Data) throws -> Int {
+			if input.format != format {
+				throw Opus.Error.badArg
+			}
+			output.count = try output.withUnsafeMutableBytes {
+				try encode(input, to: $0)
+			}
+			return output.count
+		}
+
 		public func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8]) throws -> Int {
 			if input.format != format {
 				throw Opus.Error.badArg
