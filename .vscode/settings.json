@@ -1,0 +1,91 @@
+{
+	// Editor
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"editor.detectIndentation": false,
+	"editor.formatOnSave": true,
+	"editor.insertSpaces": false,
+	"editor.tabSize": 8,
+	"files.eol": "\n",
+	//
+	// Files
+	"files.exclude": {
+		"**/.build": true,
+		"**/.git": true,
+		// "Sources/Copus": true,
+	},
+	"files.associations": {},
+	"files.insertFinalNewline": true,
+	"files.watcherExclude": {
+		"**/.git/objects/**": true,
+		"**/.git/subtree-cache/**": true,
+	},
+	"files.trimTrailingWhitespace": true,
+	//
+	// HTML
+	"html.format.contentUnformatted": "pre,code,textarea,script",
+	"html.format.unformatted": "pre,code,textarea,script,wbr",
+	"html.format.endWithNewline": true,
+	//
+	// JSON
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features",
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features",
+	},
+	//
+	// Make
+	"[makefile]": {
+		"editor.tabSize": 8
+	},
+	//
+	// Markdown
+	"[markdown]": {
+		"editor.rulers": [
+			80
+		],
+		"editor.codeActionsOnSave": {
+			"source.fixAll.markdownlint": true
+		}
+	},
+	"markdown.preview.breaks": true,
+	"markdownlint.config": {
+		"default": true,
+		"MD022": false,
+		"MD024": false,
+		"MD032": false
+	},
+	//
+	// Property Lists
+	"[plist]": {
+		"editor.formatOnSave": true,
+		"editor.tabSize": 8,
+	},
+	//
+	// Shell
+	"[shellscript]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format",
+	},
+	//
+	// Swift
+	"[swift]": {
+		"editor.detectIndentation": true,
+		"editor.insertSpaces": false,
+		"editor.tabSize": 8,
+	},
+	//
+	// YAML
+	"[yaml]": {
+		"editor.autoIndent": "keep",
+		"editor.detectIndentation": true,
+		"editor.insertSpaces": true,
+		"editor.tabSize": 2,
+		"editor.quickSuggestions": {
+			"other": true,
+			"comments": false,
+			"strings": true
+		}
+	},
+}
