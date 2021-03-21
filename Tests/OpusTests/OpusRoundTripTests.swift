@@ -19,10 +19,10 @@ final class OpusRoundTripTests: XCTestCase {
 
 		let output = try decoder.decode(data)
 
-		assertEqual(input, output)
+		assertSimilar(input, output)
 	}
 
-	func assertEqual(_ a: AVAudioPCMBuffer, _ b: AVAudioPCMBuffer, epsilon: Float32 = 0.00001) {
+	func assertSimilar(_ a: AVAudioPCMBuffer, _ b: AVAudioPCMBuffer, epsilon: Float32 = 0.00001) {
 		XCTAssertTrue(a.format.isEqual(b.format), "a.format == b.format")
 		XCTAssertEqual(a.frameLength, b.frameLength, "a.frameLength == b.frameLength")
 		for i in 0 ... a.frameLength {
