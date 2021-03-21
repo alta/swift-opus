@@ -39,26 +39,26 @@ public extension Opus {
 
 // MARK: Public encode methods
 
-extension Opus.Encoder {
-	public func encode(_ input: AVAudioPCMBuffer, to output: inout Data) throws -> Int {
+public extension Opus.Encoder {
+	func encode(_ input: AVAudioPCMBuffer, to output: inout Data) throws -> Int {
 		output.count = try output.withUnsafeMutableBytes {
 			try encode(input, to: $0)
 		}
 		return output.count
 	}
 
-	public func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8]) throws -> Int {
-		return try output.withUnsafeMutableBufferPointer {
+	func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8]) throws -> Int {
+		try output.withUnsafeMutableBufferPointer {
 			try encode(input, to: $0)
 		}
 	}
 
-	public func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableRawBufferPointer) throws -> Int {
+	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableRawBufferPointer) throws -> Int {
 		let umbp = UnsafeMutableBufferPointer(start: output.baseAddress!.bindMemory(to: UInt8.self, capacity: output.count), count: output.count)
 		return try encode(input, to: umbp)
 	}
 
-	public func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
+	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
 		guard input.format.sampleRate == format.sampleRate, input.format.channelCount == format.channelCount else {
 			throw Opus.Error.badArg
 		}
