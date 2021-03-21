@@ -1,4 +1,6 @@
 import AVFoundation
+import CoreAudio
+
 @_exported import Copus
 
 public enum Opus: CaseIterable {}
@@ -60,6 +62,12 @@ public extension Opus {
 		case .pcmFormatInt16, .pcmFormatFloat32:
 			break
 		default:
+			return false
+		}
+		if format.streamDescription.pointee.mFormatID != kAudioFormatLinearPCM {
+			return false
+		}
+		if format.channelCount == 0 || format.sampleRate == 0 {
 			return false
 		}
 		if format.channelCount > 1, !format.isInterleaved {

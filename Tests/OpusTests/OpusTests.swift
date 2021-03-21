@@ -36,6 +36,8 @@ final class OpusTests: XCTestCase {
 	static let formatFloat32Stereo = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: true)!
 	static let formatFloat64Mono = AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 1, interleaved: true)!
 	static let formatFloat64Stereo = AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 2, interleaved: true)!
+	static let formatOpus48Mono = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000.0, AVNumberOfChannelsKey: 1])!
+	static let formatOpus48Stereo = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000.0, AVNumberOfChannelsKey: 2])!
 
 	static let validFormats = [
 		formatInt16Mono,
@@ -50,6 +52,8 @@ final class OpusTests: XCTestCase {
 		formatInt32Stereo,
 		formatFloat64Mono,
 		formatFloat64Stereo,
+		formatOpus48Mono,
+		formatOpus48Stereo,
 	]
 
 	func testIsValidFormat() throws {
