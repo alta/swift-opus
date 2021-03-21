@@ -65,10 +65,4 @@ final class OpusTests: XCTestCase {
 			XCTAssertFalse(Opus.isValidFormat($0))
 		}
 	}
-
-	//    func testRecorder() throws {
-	//        let recorder = try Opus.Recorder()
-	//        try recorder.start()
-	//        recorder.stop()
-	//    }
 }
