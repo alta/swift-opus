@@ -3,8 +3,6 @@ import Copus
 
 public extension Opus {
 	class Encoder {
-		public static let defaultFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 1, interleaved: true)!
-
 		let format: AVAudioFormat
 		let application: Application
 		let encoder: OpaquePointer
