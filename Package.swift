@@ -110,7 +110,8 @@ let package = Package(
 		),
 		.testTarget(
 			name: "OpusTests",
-			dependencies: ["Opus"]
+			dependencies: ["Opus"],
+			resources: [.copy("Resources")]
 		),
 	]
 )
