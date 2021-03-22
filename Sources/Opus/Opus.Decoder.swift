@@ -40,27 +40,28 @@ public extension Opus {
 public extension Opus.Decoder {
 	func decode(_ input: Data) throws -> AVAudioPCMBuffer {
 		return try input.withUnsafeBytes {
-			let ubp = $0.baseAddress!.bindMemory(to: UInt8.self, capacity: $0.count)
-			let sampleCount = opus_decoder_get_nb_samples(decoder, ubp, Int32($0.count))
+			let ubp = $0.bindMemory(to: UInt8.self)
+			let sampleCount = opus_decoder_get_nb_samples(decoder, ubp.baseAddress!, Int32($0.count))
 			let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(sampleCount))!
-			try decode(input, to: output)
+			try decode(ubp, to: output)
 			return output
 		}
 	}
 
-	func decode(_ input: Data, to output: AVAudioPCMBuffer) throws {
-		let bytes = [UInt8](input)
-		let decodedCount: Int32
-		switch format.commonFormat {
+	func decode(_ input: UnsafeBufferPointer<UInt8>, to output: AVAudioPCMBuffer) throws {
+		let decodedCount: Int
+		switch output.format.commonFormat {
 		case .pcmFormatInt16:
-			decodedCount = opus_decode(decoder, bytes, Int32(bytes.count), output.int16ChannelData![0], Int32(output.frameCapacity), 0)
+			let output = UnsafeMutableBufferPointer(start: output.int16ChannelData![0], count: Int(output.frameCapacity))
+			decodedCount = try decode(input, to: output)
 		case .pcmFormatFloat32:
-			decodedCount = opus_decode_float(decoder, bytes, Int32(bytes.count), output.floatChannelData![0], Int32(output.frameCapacity), 0)
+			let output = UnsafeMutableBufferPointer(start: output.floatChannelData![0], count: Int(output.frameCapacity))
+			decodedCount = try decode(input, to: output)
 		default:
 			throw Opus.Error.badArg
 		}
 		if decodedCount < 0 {
-			throw Opus.Error(decodedCount)
+			throw Opus.Error(Int32(decodedCount))
 		}
 		output.frameLength = AVAudioFrameCount(decodedCount)
 	}
