@@ -11,7 +11,7 @@ final class OpusDecoderTests: XCTestCase {
 
 		try AVAudioFormatTests.invalidFormats.forEach {
 			XCTAssertThrowsError(try Opus.Decoder(format: $0)) { error in
-				XCTAssertEqual(error as! Opus.Error, Opus.Error.badArg)
+				XCTAssertEqual(error as! Opus.Error, Opus.Error.badArgument)
 			}
 		}
 	}

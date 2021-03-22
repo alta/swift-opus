@@ -9,7 +9,7 @@ public extension Opus {
 		// TODO: throw an error if format is unsupported
 		public init(format: AVAudioFormat, application _: Application = .audio) throws {
 			if !format.isValidOpusPCMFormat {
-				throw Opus.Error.badArg
+				throw Opus.Error.badArgument
 			}
 
 			self.format = format
@@ -58,7 +58,7 @@ public extension Opus.Decoder {
 			let output = UnsafeMutableBufferPointer(start: output.floatChannelData![0], count: Int(output.frameCapacity))
 			decodedCount = try decode(input, to: output)
 		default:
-			throw Opus.Error.badArg
+			throw Opus.Error.badArgument
 		}
 		if decodedCount < 0 {
 			throw Opus.Error(Int32(decodedCount))

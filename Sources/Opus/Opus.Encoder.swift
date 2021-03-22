@@ -10,7 +10,7 @@ public extension Opus {
 		// TODO: throw an error if format is unsupported
 		public init(format: AVAudioFormat, application: Application = .audio) throws {
 			if !format.isValidOpusPCMFormat {
-				throw Opus.Error.badArg
+				throw Opus.Error.badArgument
 			}
 
 			self.format = format
@@ -60,7 +60,7 @@ public extension Opus.Encoder {
 
 	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
 		guard input.format.sampleRate == format.sampleRate, input.format.channelCount == format.channelCount else {
-			throw Opus.Error.badArg
+			throw Opus.Error.badArgument
 		}
 		switch format.commonFormat {
 		case .pcmFormatInt16:
@@ -70,7 +70,7 @@ public extension Opus.Encoder {
 			let input = UnsafeBufferPointer(start: input.floatChannelData![0], count: Int(input.frameLength * format.channelCount))
 			return try encode(input, to: output)
 		default:
-			throw Opus.Error.badArg
+			throw Opus.Error.badArgument
 		}
 	}
 }
