@@ -8,7 +8,7 @@ public extension Opus {
 
 		// TODO: throw an error if format is unsupported
 		public init(format: AVAudioFormat, application _: Application = .audio) throws {
-			if !format.isValidOpusFormat {
+			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArg
 			}
 

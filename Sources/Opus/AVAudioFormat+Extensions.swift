@@ -1,7 +1,7 @@
 import AVFoundation
 
 public extension AVAudioFormat {
-	var isValidOpusFormat: Bool {
+	var isValidOpusPCMFormat: Bool {
 		switch sampleRate {
 		case .opus8khz, .opus12khz, .opus16khz, .opus24khz, .opus48khz:
 			break

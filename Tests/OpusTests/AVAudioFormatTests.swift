@@ -61,11 +61,11 @@ final class AVAudioFormatTests: XCTestCase {
 
 	func testIsValidFormat() throws {
 		Self.validFormats.forEach {
-			XCTAssert($0.isValidOpusFormat, $0.description)
+			XCTAssert($0.isValidOpusPCMFormat, $0.description)
 		}
 
 		Self.invalidFormats.forEach {
-			XCTAssertFalse($0.isValidOpusFormat, $0.description)
+			XCTAssertFalse($0.isValidOpusPCMFormat, $0.description)
 		}
 	}
 }
