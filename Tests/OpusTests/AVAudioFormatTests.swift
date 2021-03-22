@@ -4,59 +4,66 @@ import XCTest
 @testable import Opus
 
 final class AVAudioFormatTests: XCTestCase {
-	static let commonFormatInt16Mono = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 1, interleaved: true)!
-	static let commonFormatInt16Stereo = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: true)!
-	static let commonFormatInt16Stereo8 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
-	static let commonFormatInt16Stereo12 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
-	static let commonFormatInt16Stereo16 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
-	static let commonFormatInt16Stereo24 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
-	static let commonFormatInt16Stereo44 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 44000, channels: 2, interleaved: true)!
-	static let commonFormatInt16StereoNonInterleaved = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: false)!
-	static let commonFormatInt32Mono = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 1, interleaved: true)!
-	static let commonFormatInt32Stereo = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 2, interleaved: true)!
-	static let commonFormatFloat32Mono = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 1, interleaved: true)!
-	static let commonFormatFloat32Stereo = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: true)!
-	static let commonFormatFloat64Mono = AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 1, interleaved: true)!
-	static let commonFormatFloat64Stereo = AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 2, interleaved: true)!
+	static let nilFormats = [
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: 44100, channels: 1),
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: 44100, channels: 2),
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: 44100, channels: 1),
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: 44100, channels: 2),
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus48khz, channels: 0),
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus48khz, channels: 3),
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 4),
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 5),
+	]
 
-	static let formatInt16Mono = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!
-	static let formatInt16Stereo = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!
-	static let formatInt16StereoNonInterleaved = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: true])!
-	static let formatInt32Mono = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!
-	static let formatInt32Stereo = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!
-	static let formatFloat32Mono = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: true, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!
-	static let formatFloat32Stereo = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: true, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!
-
-	static let formatOpusMono = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1])!
-	static let formatOpusStereo = AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2])!
+	func testInitializer() throws {
+		Self.nilFormats.forEach {
+			XCTAssertNil($0)
+		}
+	}
 
 	static let validFormats = [
-		commonFormatInt16Mono,
-		commonFormatInt16Stereo,
-		commonFormatInt16Stereo8,
-		commonFormatInt16Stereo12,
-		commonFormatInt16Stereo16,
-		commonFormatInt16Stereo24,
-		commonFormatFloat32Mono,
-		commonFormatFloat32Stereo,
-		formatInt16Mono,
-		formatInt16Stereo,
-		formatFloat32Mono,
-		formatFloat32Stereo,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 1, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 1, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: true)!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: true, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: true, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus12khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus12khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus16khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus16khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus24khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus24khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus48khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus48khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus12khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus12khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus16khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus16khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus24khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus24khz, channels: 2)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 1)!,
+		AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 2)!,
 	]
 
 	static let invalidFormats = [
-		commonFormatInt16StereoNonInterleaved,
-		commonFormatInt16Stereo44,
-		commonFormatInt32Mono,
-		commonFormatInt32Stereo,
-		commonFormatFloat64Mono,
-		commonFormatFloat64Stereo,
-		formatInt16StereoNonInterleaved,
-		formatInt32Mono,
-		formatInt32Stereo,
-		formatOpusMono,
-		formatOpusStereo,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: false)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 44100, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 1, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 2, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 1, interleaved: true)!,
+		AVAudioFormat(commonFormat: .pcmFormatFloat64, sampleRate: 48000, channels: 2, interleaved: true)!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 16, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: true])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMIsFloatKey: false, AVLinearPCMBitDepthKey: 32, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2, AVLinearPCMIsNonInterleaved: false])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 1])!,
+		AVAudioFormat(settings: [AVFormatIDKey: kAudioFormatOpus, AVSampleRateKey: 48000, AVNumberOfChannelsKey: 2])!,
 	]
 
 	func testIsValidFormat() throws {

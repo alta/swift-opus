@@ -7,7 +7,7 @@ final class OpusRoundTripTests: XCTestCase {
 	let engine = AVAudioEngine()
 
 	func testSilence() throws {
-		let format = AVAudioFormatTests.formatFloat32Mono
+		let format = AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 1)!
 		let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: .opusMax)!
 		input.frameLength = input.frameCapacity // Silence
 		_ = try encodeAndDecode(input)
@@ -16,7 +16,7 @@ final class OpusRoundTripTests: XCTestCase {
 	func testSoundFile() throws {
 		let url = Bundle.module.url(forResource: "MuteMono", withExtension: "wav")!
 		let audioFile = try AVAudioFile(forReading: url)
-		let format = AVAudioFormatTests.formatFloat32Mono
+		let format = AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 1)!
 		let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: .opusMax)!
 		try audioFile.read(into: input, frameCount: input.frameCapacity)
 		_ = try encodeAndDecode(input)
