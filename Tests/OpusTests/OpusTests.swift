@@ -29,6 +29,11 @@ final class OpusTests: XCTestCase {
 
 	static let commonFormatInt16Mono = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 1, interleaved: true)!
 	static let commonFormatInt16Stereo = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: true)!
+	static let commonFormatInt16Stereo8 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
+	static let commonFormatInt16Stereo12 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
+	static let commonFormatInt16Stereo16 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
+	static let commonFormatInt16Stereo24 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 2, interleaved: true)!
+	static let commonFormatInt16Stereo44 = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 44000, channels: 2, interleaved: true)!
 	static let commonFormatInt16StereoNonInterleaved = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: false)!
 	static let commonFormatInt32Mono = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 1, interleaved: true)!
 	static let commonFormatInt32Stereo = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 48000, channels: 2, interleaved: true)!
@@ -51,6 +56,10 @@ final class OpusTests: XCTestCase {
 	static let validFormats = [
 		commonFormatInt16Mono,
 		commonFormatInt16Stereo,
+		commonFormatInt16Stereo8,
+		commonFormatInt16Stereo12,
+		commonFormatInt16Stereo16,
+		commonFormatInt16Stereo24,
 		commonFormatFloat32Mono,
 		commonFormatFloat32Stereo,
 		formatInt16Mono,
@@ -61,6 +70,7 @@ final class OpusTests: XCTestCase {
 
 	static let invalidFormats = [
 		commonFormatInt16StereoNonInterleaved,
+		commonFormatInt16Stereo44,
 		commonFormatInt32Mono,
 		commonFormatInt32Stereo,
 		commonFormatFloat64Mono,

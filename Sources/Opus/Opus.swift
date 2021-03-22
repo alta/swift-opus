@@ -58,14 +58,21 @@ public extension Opus {
 
 public extension Opus {
 	static func isValidFormat(_ format: AVAudioFormat) -> Bool {
-		if format.sampleRate == 0 {
+		switch format.sampleRate {
+		case 8000, 12000, 16000, 24000, 48000:
+			break
+		default:
 			return false
 		}
 
-		if format.channelCount == 0 || format.channelCount > 2 {
+		switch format.channelCount {
+		case 1, 2:
+			break
+		default:
 			return false
 		}
-		if format.channelCount > 1, !format.isInterleaved {
+
+		if format.channelCount != 1, !format.isInterleaved {
 			return false
 		}
 
