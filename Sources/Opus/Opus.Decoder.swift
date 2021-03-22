@@ -37,7 +37,15 @@ public extension Opus {
 			let bytes = [UInt8](input)
 			let sampleCount = opus_decoder_get_nb_samples(decoder, bytes, Int32(bytes.count))
 			let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(sampleCount))!
-			let decodedCount = opus_decode_float(decoder, bytes, Int32(bytes.count), output.floatChannelData![0], Int32(output.frameCapacity), 0)
+			let decodedCount: Int32
+			switch format.commonFormat {
+			case .pcmFormatInt16:
+				decodedCount = opus_decode(decoder, bytes, Int32(bytes.count), output.int16ChannelData![0], Int32(output.frameCapacity), 0)
+			case .pcmFormatFloat32:
+				decodedCount = opus_decode_float(decoder, bytes, Int32(bytes.count), output.floatChannelData![0], Int32(output.frameCapacity), 0)
+			default:
+				throw Opus.Error.badArg
+			}
 			if decodedCount < 0 {
 				throw Opus.Error(decodedCount)
 			}
