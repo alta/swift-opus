@@ -1,6 +1,6 @@
 # Swift Opus
 
-[Swift](https://swift.org/) bindings for the [Opus audio codec](https://opus-codec.org/) on Apple platforms (iOS, tvOS, macOS).
+[Swift](https://swift.org/) bindings for the [Opus audio codec](https://opus-codec.org/) on Apple platforms (iOS, tvOS, macOS, watchOS).
 
 ## Installation
 
