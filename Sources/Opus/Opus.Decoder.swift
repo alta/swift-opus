@@ -61,7 +61,7 @@ public extension Opus.Decoder {
 			throw Opus.Error.badArgument
 		}
 		if decodedCount < 0 {
-			throw Opus.Error(Int32(decodedCount))
+			throw Opus.Error(decodedCount)
 		}
 		output.frameLength = AVAudioFrameCount(decodedCount)
 	}

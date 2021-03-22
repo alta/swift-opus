@@ -27,8 +27,8 @@ public extension Opus {
 			self.init(rawValue: value)
 		}
 
-		public init(_ value: IntegerLiteralType) {
-			self.init(rawValue: value)
+		public init<T: BinaryInteger>(_ value: T) {
+			self.init(rawValue: IntegerLiteralType(value))
 		}
 	}
 }
