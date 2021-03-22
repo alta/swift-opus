@@ -5,11 +5,11 @@ import XCTest
 
 final class OpusDecoderTests: XCTestCase {
 	func testInit() throws {
-		try OpusTests.validFormats.forEach {
+		try AVAudioFormatTests.validFormats.forEach {
 			_ = try Opus.Decoder(format: $0)
 		}
 
-		try OpusTests.invalidFormats.forEach {
+		try AVAudioFormatTests.invalidFormats.forEach {
 			XCTAssertThrowsError(try Opus.Decoder(format: $0)) { error in
 				XCTAssertEqual(error as! Opus.Error, Opus.Error.badArg)
 			}
