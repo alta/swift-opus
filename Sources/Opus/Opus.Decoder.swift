@@ -42,6 +42,12 @@ public extension Opus.Decoder {
 		let bytes = [UInt8](input)
 		let sampleCount = opus_decoder_get_nb_samples(decoder, bytes, Int32(bytes.count))
 		let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(sampleCount))!
+		try decode(input, to: output)
+		return output
+	}
+
+	func decode(_ input: Data, to output: AVAudioPCMBuffer) throws {
+		let bytes = [UInt8](input)
 		let decodedCount: Int32
 		switch format.commonFormat {
 		case .pcmFormatInt16:
@@ -55,7 +61,6 @@ public extension Opus.Decoder {
 			throw Opus.Error(decodedCount)
 		}
 		output.frameLength = AVAudioFrameCount(decodedCount)
-		return output
 	}
 }
 
