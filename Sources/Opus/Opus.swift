@@ -59,7 +59,7 @@ public extension Opus {
 public extension Opus {
 	static func isValidFormat(_ format: AVAudioFormat) -> Bool {
 		switch format.sampleRate {
-		case 8000, 12000, 16000, 24000, 48000:
+		case .opus8khz, .opus12khz, .opus16khz, .opus24khz, .opus48khz:
 			break
 		default:
 			return false
