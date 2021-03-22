@@ -39,7 +39,7 @@ public extension Opus {
 
 public extension Opus.Decoder {
 	func decode(_ input: Data) throws -> AVAudioPCMBuffer {
-		return try input.withUnsafeBytes {
+		try input.withUnsafeBytes {
 			let input = $0.bindMemory(to: UInt8.self)
 			let sampleCount = opus_decoder_get_nb_samples(decoder, input.baseAddress!, Int32($0.count))
 			let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(sampleCount))!
