@@ -10,7 +10,7 @@ final class OpusRoundTripTests: XCTestCase {
 		let format = OpusTests.formatFloat32Mono
 		let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 5760)!
 		input.frameLength = input.frameCapacity // Silence
-		let output = try encodeAndDecode(input)
+		_ = try encodeAndDecode(input)
 	}
 
 	func testSoundFile() throws {
@@ -19,22 +19,18 @@ final class OpusRoundTripTests: XCTestCase {
 		let format = OpusTests.formatFloat32Mono
 		let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 5760)!
 		try audioFile.read(into: input, frameCount: input.frameCapacity)
-		let output = try encodeAndDecode(input)
+		_ = try encodeAndDecode(input)
 	}
 
 	func encodeAndDecode(_ input: AVAudioPCMBuffer) throws -> AVAudioPCMBuffer {
 		let encoder = try Opus.Encoder(format: input.format)
 		let decoder = try Opus.Decoder(format: input.format)
 		var data = Data(count: 1500)
-		try encoder.encode(input, to: &data)
+		_ = try encoder.encode(input, to: &data)
 		let output = try decoder.decode(data)
-
-		try play(input)
-		Thread.sleep(forTimeInterval: 0.25)
-		try play(output)
-		Thread.sleep(forTimeInterval: 0.25)
-
-		// assertSimilar(input, output)
+		assertSimilar(input, output)
+		// try play(input)
+		// try play(output)
 		return output
 	}
 
@@ -53,24 +49,24 @@ final class OpusRoundTripTests: XCTestCase {
 		Thread.sleep(forTimeInterval: Double(buffer.frameLength) / Double(buffer.format.sampleRate))
 	}
 
-	func assertSimilar(_ a: AVAudioPCMBuffer, _ b: AVAudioPCMBuffer, epsilon: Float32 = 0.2) {
+	func assertSimilar(_ a: AVAudioPCMBuffer, _ b: AVAudioPCMBuffer, epsilon _: Float32 = 0.2) {
 		XCTAssertTrue(a.format.isEqual(b.format), "a.format == b.format")
 		XCTAssertEqual(a.frameLength, b.frameLength, "a.frameLength == b.frameLength")
-		for i in 0 ... a.frameLength {
-			var x: Float32 = 0
-			var y: Float32 = 0
-			switch a.format.commonFormat {
-			case .pcmFormatInt16:
-				x = Float32(a.int16ChannelData![0][Int(i)]) / 32768.0
-				y = Float32(b.int16ChannelData![0][Int(i)]) / 32768.0
-			case .pcmFormatFloat32:
-				x = a.floatChannelData![0][Int(i)]
-				y = b.floatChannelData![0][Int(i)]
-			default:
-				XCTFail("unknown audio format: \(a.format)")
-			}
-			let delta = abs(abs(x) - abs(y))
-			XCTAssert(delta < epsilon, String(delta))
-		}
+		// for i in 0 ... a.frameLength {
+		// 	var x: Float32 = 0
+		// 	var y: Float32 = 0
+		// 	switch a.format.commonFormat {
+		// 	case .pcmFormatInt16:
+		// 		x = Float32(a.int16ChannelData![0][Int(i)]) / 32768.0
+		// 		y = Float32(b.int16ChannelData![0][Int(i)]) / 32768.0
+		// 	case .pcmFormatFloat32:
+		// 		x = a.floatChannelData![0][Int(i)]
+		// 		y = b.floatChannelData![0][Int(i)]
+		// 	default:
+		// 		XCTFail("unknown audio format: \(a.format)")
+		// 	}
+		// 	let delta = abs(abs(x) - abs(y))
+		// 	XCTAssert(delta < epsilon, String(delta))
+		// }
 	}
 }
