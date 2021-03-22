@@ -1,6 +1,6 @@
 import AVFoundation
 
-extension AVAudioFrameCount {
+public extension AVAudioFrameCount {
 	// Opus can encode packets as small as 2.5ms at 8khz (20 samples)
 	static let opusMin: Self = 20
 
