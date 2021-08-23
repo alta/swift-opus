@@ -50,8 +50,6 @@ let package = Package(
 				"meson.build",
 				"meson",
 				"NEWS",
-				"opus_headers.mk",
-				"opus_sources.mk",
 				"opus-uninstalled.pc.in",
 				"opus.m4",
 				"opus.pc.in",
