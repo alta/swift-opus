@@ -15,6 +15,10 @@ let package = Package(
 			targets: ["Copus"]
 		),
 		.library(
+			name: "Copus-wrapper",
+			targets: ["Copus-wrapper"]
+		),
+		.library(
 			name: "Opus",
 			targets: ["Opus", "Copus"]
 		),
@@ -28,6 +32,8 @@ let package = Package(
 				"AUTHORS",
 				"autogen.sh",
 				"celt/arm",
+				"celt_headers.mk",
+				"celt_sources.mk",
 				"celt/dump_modes",
 				"celt/meson.build",
 				"celt/opus_custom_demo.c",
@@ -50,6 +56,8 @@ let package = Package(
 				"meson.build",
 				"meson",
 				"NEWS",
+				"opus_headers.mk",
+				"opus_sources.mk",
 				"opus-uninstalled.pc.in",
 				"opus.m4",
 				"opus.pc.in",
@@ -102,9 +110,13 @@ let package = Package(
 				.define("HAVE_UNISTD_H", to: "1"),
 			]
 		),
+    .target(
+      name: "Copus-wrapper",
+      dependencies: ["Copus"]
+    ),
 		.target(
 			name: "Opus",
-			dependencies: ["Copus"]
+			dependencies: ["Copus", "Copus-wrapper"]
 		),
 		.testTarget(
 			name: "OpusTests",
