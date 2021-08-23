@@ -15,8 +15,8 @@ let package = Package(
 			targets: ["Copus"]
 		),
 		.library(
-			name: "Copus-wrapper",
-			targets: ["Copus-wrapper"]
+			name: "Copuswrapper",
+			targets: ["Copuswrapper"]
 		),
 		.library(
 			name: "Opus",
@@ -111,12 +111,12 @@ let package = Package(
 			]
 		),
     .target(
-      name: "Copus-wrapper",
+      name: "Copuswrapper",
       dependencies: ["Copus"]
     ),
 		.target(
 			name: "Opus",
-			dependencies: ["Copus", "Copus-wrapper"]
+			dependencies: ["Copus", "Copuswrapper"]
 		),
 		.testTarget(
 			name: "OpusTests",
