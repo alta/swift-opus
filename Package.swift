@@ -88,7 +88,7 @@ let package = Package(
 				.headerSearchPath("silk/float"),
 
 				.define("OPUS_BUILD"),
-				.define("CUSTOM_MODES")
+				.define("CUSTOM_MODES"),
 				.define("VAR_ARRAYS", to: "1"),
 				.define("FLOATING_POINT"), // Enable Opus floating-point mode
 
