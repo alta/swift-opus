@@ -27,8 +27,6 @@ let package = Package(
 			exclude: [
 				"AUTHORS",
 				"autogen.sh",
-				"celt_headers.mk",
-				"celt_sources.mk",
 				"celt/arm",
 				"celt/dump_modes",
 				"celt/meson.build",
