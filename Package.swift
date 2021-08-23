@@ -112,7 +112,11 @@ let package = Package(
 		),
     .target(
       name: "Copuswrapper",
-      dependencies: ["Copus"]
+      dependencies: ["Copus"],
+      publicHeadersPath: "include",
+      cSettings: [
+        .headerSearchPath(".")
+      ]
     ),
 		.target(
 			name: "Opus",
