@@ -17,7 +17,7 @@ final class OpusDecoderTests: XCTestCase {
 	}
 
 
-	func test_CorruptedOpusData_ThrowsInvalidPacketError() throws {
+	func testCorruptedOpusDataThrowsInvalidPacketError() throws {
 		guard let opusFormat = AVAudioFormat(opusPCMFormat: .int16, sampleRate: .opus16khz, channels: 1) else {
 			XCTFail("Unable to generate desired opusFormat")
 			return
