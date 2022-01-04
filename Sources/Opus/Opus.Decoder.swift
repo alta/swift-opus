@@ -43,7 +43,7 @@ public extension Opus.Decoder {
 			let input = $0.bindMemory(to: UInt8.self)
 			let sampleCount = opus_decoder_get_nb_samples(decoder, input.baseAddress!, Int32($0.count))
 			if sampleCount < 0 {
-				throw Opus.Error.invalidPacket
+				throw Opus.Error(sampleCount)
 			}
 			let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(sampleCount))!
 			try decode(input, to: output)
