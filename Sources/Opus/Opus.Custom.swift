@@ -5,8 +5,8 @@ import Foundation
 public extension Opus {
   class Custom {
     private let opusCustomMode: OpaquePointer
-    internal let encoder: Opus.Encoder
-    internal let decoder: Opus.Decoder
+    let encoder: Opus.Encoder
+    let decoder: Opus.Decoder
     
     public init(format: AVAudioFormat,
                 application: Application = .audio,
