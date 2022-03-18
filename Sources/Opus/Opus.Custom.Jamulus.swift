@@ -18,13 +18,13 @@ public extension Opus.Custom {
     
     // Disable variable bit rates
     error.rawValue = opus_custom_encoder_ctl_wrapper(
-      encoder,
+      encoder.encoder,
       OPUS_SET_VBR_REQUEST, 0)
     guard error == .ok else { throw error }
  
     // Request low latency
     error.rawValue = opus_custom_encoder_ctl_wrapper(
-      encoder,
+      encoder.encoder,
       OPUS_SET_APPLICATION_REQUEST, OPUS_APPLICATION_RESTRICTED_LOWDELAY)
     guard error == .ok else { throw error }
     
@@ -32,14 +32,14 @@ public extension Opus.Custom {
     case 64:
       // Adjust PLC behaviour for better drop out handling
       error.rawValue = opus_custom_encoder_ctl_wrapper(
-        encoder,
+        encoder.encoder,
         OPUS_SET_PACKET_LOSS_PERC_REQUEST, 35)
       guard error == .ok else { throw error }
       
     case 128:
       // Set complexity for 128 sample frame size
       error.rawValue = opus_custom_encoder_ctl_wrapper(
-        encoder,
+        encoder.encoder,
         OPUS_SET_COMPLEXITY_REQUEST, 1)
       guard error == .ok else { throw error }
       

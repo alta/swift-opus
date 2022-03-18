@@ -6,8 +6,9 @@ public extension Opus {
 		let format: AVAudioFormat
 		let decoder: OpaquePointer
 
-		// TODO: throw an error if format is unsupported
-		public init(format: AVAudioFormat, application _: Application = .audio) throws {
+		public init(format: AVAudioFormat,
+                application _: Application = .audio,
+                customDecoder: OpaquePointer? = nil) throws {
 			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArgument
 			}
@@ -16,11 +17,15 @@ public extension Opus {
 
 			// Initialize Opus decoder
 			var error: Opus.Error = .ok
-			decoder = opus_decoder_create(Int32(format.sampleRate), Int32(format.channelCount), &error.rawValue)
-			if error != .ok {
-				throw error
-			}
-		}
+      if let custom = customDecoder {
+        decoder = custom
+      } else {
+        decoder = opus_decoder_create(Int32(format.sampleRate), Int32(format.channelCount), &error.rawValue)
+        if error != .ok {
+          throw error
+        }
+      }
+    }
 
 		deinit {
 			opus_decoder_destroy(decoder)

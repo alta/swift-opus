@@ -5,8 +5,8 @@ import Foundation
 public extension Opus {
   class Custom {
     private let opusCustomMode: OpaquePointer
-    let encoder: OpaquePointer
-    let decoder: OpaquePointer
+    internal let encoder: Opus.Encoder
+    internal let decoder: Opus.Decoder
     
     public init(format: AVAudioFormat,
                 application: Application = .audio,
@@ -29,19 +29,22 @@ public extension Opus {
         customMode,
         Int32(format.channelCount),
         &error.rawValue) else { throw error }
-      encoder = opusEncoder
+      
+      encoder = try Opus.Encoder(format: format,
+                                 application: application,
+                                 customEncoder: opusEncoder)
       
       // Create custom decoder
       guard let opusDecoder = opus_custom_decoder_create(
         customMode,
         Int32(format.channelCount),
         &error.rawValue) else { throw error }
-      decoder = opusDecoder
+      decoder = try Opus.Decoder(format: format,
+                                 application: application,
+                                 customDecoder: opusDecoder)
     }
     
     deinit {
-      opus_custom_decoder_destroy(decoder)
-      opus_custom_encoder_destroy(encoder)
       opus_custom_mode_destroy(opusCustomMode)
     }
   }
