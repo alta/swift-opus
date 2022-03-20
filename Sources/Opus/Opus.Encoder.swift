@@ -8,8 +8,7 @@ public extension Opus {
 		let encoder: OpaquePointer
 
 		public init(format: AVAudioFormat,
-                application: Application = .audio,
-                customEncoder: OpaquePointer? = nil) throws {
+                application: Application = .audio) throws {
 			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArgument
 			}
@@ -19,13 +18,9 @@ public extension Opus {
 
 			// Initialize Opus encoder
 			var error: Opus.Error = .ok
-      if let custom = customEncoder {
-        encoder = custom
-      } else {
-        encoder = opus_encoder_create(Int32(format.sampleRate), Int32(format.channelCount), application.rawValue, &error.rawValue)
-        if error != .ok {
-          throw error
-        }
+      encoder = opus_encoder_create(Int32(format.sampleRate), Int32(format.channelCount), application.rawValue, &error.rawValue)
+      if error != .ok {
+        throw error
       }
 		}
 
