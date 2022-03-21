@@ -131,7 +131,7 @@ public extension Opus {
         input.baseAddress!,
         Int32(input.count) / Int32(format.channelCount),
         output.baseAddress!,
-        Int32(output.count)
+        Int32(maxCompressedBytes)
       )
       if encodedSize < 0 {
         throw Opus.Error(encodedSize)
