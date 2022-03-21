@@ -129,7 +129,7 @@ public extension Opus {
       let encodedSize = opus_custom_encode_float(
         encoder,
         input.baseAddress!,
-        Int32(input.count) / Int32(format.channelCount),
+        frameSize,
         output.baseAddress!,
         Int32(maxCompressedBytes)
       )
