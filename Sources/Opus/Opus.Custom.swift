@@ -1,5 +1,6 @@
 import AVFoundation
 import Copus
+import Copuswrapper
 import Foundation
 
 public extension Opus {
@@ -48,6 +49,15 @@ public extension Opus {
       opus_encoder_destroy(encoder)
       opus_decoder_destroy(decoder)
       opus_custom_mode_destroy(opusCustomMode)
+    }
+    
+    ///
+    /// Wrapper onto the opus_custom_encoder_ctl function
+    public func encoderCtl(request: Int32, value: Int32) -> Opus.Error {
+      var error: Opus.Error = .ok
+      error.rawValue = opus_custom_encoder_ctl_wrapper(encoder,
+                                                       request, value)
+      return error
     }
     
     ///
