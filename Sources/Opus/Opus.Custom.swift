@@ -9,7 +9,7 @@ public extension Opus {
     let encoder: OpaquePointer
     let decoder: OpaquePointer
     private let format: AVAudioFormat
-    let frameSize: Int32
+    public let frameSize: Int32
     
     public init(format: AVAudioFormat,
                 application: Application = .audio,
