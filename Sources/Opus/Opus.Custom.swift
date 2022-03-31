@@ -151,16 +151,14 @@ public extension Opus {
     
     
     
-    public func decode(_ data: Data) throws -> AVAudioPCMBuffer {
+    public func decode(_ data: Data,
+                       sampleMultiplier: Int32) throws -> AVAudioPCMBuffer {
       try data.withUnsafeBytes {
         let input = $0.bindMemory(to: UInt8.self)
-        let sampleCount = opus_decoder_get_nb_samples(
-          decoder, input.baseAddress!, Int32($0.count)
-        )
         
         let output = AVAudioPCMBuffer(
           pcmFormat: format,
-          frameCapacity: AVAudioFrameCount(sampleCount))!
+          frameCapacity: AVAudioFrameCount(frameSize * sampleMultiplier))!
         try decode(input, to: output)
         
         return output
