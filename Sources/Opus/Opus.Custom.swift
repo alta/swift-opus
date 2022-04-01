@@ -4,6 +4,11 @@ import Copuswrapper
 import Foundation
 
 public extension Opus {
+  
+  ///
+  /// Implements a custom opus encoder / decoder.
+  /// Custom implementations can have non-standard frame sizes
+  ///
   class Custom {
     private let opusCustomMode: OpaquePointer
     let encoder: OpaquePointer
@@ -53,6 +58,10 @@ public extension Opus {
     
     ///
     /// Wrapper onto the opus_custom_encoder_ctl function
+    /// - Parameter request The Opus CTL to change
+    /// - Parameter value The value to set it to
+    ///
+    /// - Returns Opus.Error code
     public func encoderCtl(request: Int32, value: Int32) -> Opus.Error {
       var error: Opus.Error = .ok
       error.rawValue = opus_custom_encoder_ctl_wrapper(encoder,
@@ -64,35 +73,35 @@ public extension Opus {
     /// Encode a PCM buffer to data using the custom mode configuration and max size
     ///
     public func encode(_ avData: AVAudioPCMBuffer,
-                       maxCompressedBytes: Int) throws -> Data {
-      var compressed = Data(capacity: maxCompressedBytes)
+                       compressedSize: Int) throws -> Data {
+      var compressed = Data(capacity: compressedSize)
       compressed.count = try compressed.withUnsafeMutableBytes(
-        { try encode(avData, to: $0, maxCompressedBytes: maxCompressedBytes) }
+        { try encode(avData, to: $0, compressedSize: compressedSize) }
       )
       return compressed
     }
     
     private func encode(_ input: AVAudioPCMBuffer,
                         to output: inout [UInt8],
-                        maxCompressedBytes: Int) throws -> Int {
+                        compressedSize: Int) throws -> Int {
       try output.withUnsafeMutableBufferPointer {
-        try encode(input, to: $0, maxCompressedBytes: maxCompressedBytes)
+        try encode(input, to: $0, compressedSize: compressedSize)
       }
     }
     
     private func encode(_ input: AVAudioPCMBuffer,
                         to output: UnsafeMutableRawBufferPointer,
-                        maxCompressedBytes: Int) throws -> Int {
+                        compressedSize: Int) throws -> Int {
       let output = UnsafeMutableBufferPointer(
         start: output.baseAddress!.bindMemory(
           to: UInt8.self, capacity: output.count),
         count: output.count)
-      return try encode(input, to: output, maxCompressedBytes: maxCompressedBytes)
+      return try encode(input, to: output, compressedSize: compressedSize)
     }
     
     private func encode(_ input: AVAudioPCMBuffer,
                         to output: UnsafeMutableBufferPointer<UInt8>,
-                        maxCompressedBytes: Int) throws -> Int {
+                        compressedSize: Int) throws -> Int {
       guard input.format.sampleRate == format.sampleRate,
               input.format.channelCount == format.channelCount else {
         throw Opus.Error.badArgument
@@ -103,13 +112,13 @@ public extension Opus {
         let input = UnsafeBufferPointer(
           start: input.int16ChannelData![0],
           count: Int(input.frameLength * format.channelCount))
-        return try encode(input, to: output, maxCompressedBytes: maxCompressedBytes)
+        return try encode(input, to: output, compressedSize: compressedSize)
         
       case .pcmFormatFloat32:
         let input = UnsafeBufferPointer(
           start: input.floatChannelData![0],
           count: Int(input.frameLength * format.channelCount))
-        return try encode(input, to: output, maxCompressedBytes: maxCompressedBytes)
+        return try encode(input, to: output, compressedSize: compressedSize)
         
       default:
         throw Opus.Error.badArgument
@@ -118,13 +127,13 @@ public extension Opus {
     
     private func encode(_ input: UnsafeBufferPointer<Int16>,
                         to output: UnsafeMutableBufferPointer<UInt8>,
-                        maxCompressedBytes: Int) throws -> Int {
+                        compressedSize: Int) throws -> Int {
       let encodedSize = opus_custom_encode(
         encoder,
         input.baseAddress!,
         frameSize,
         output.baseAddress!,
-        Int32(maxCompressedBytes)
+        Int32(compressedSize)
       )
       
       if encodedSize < 0 {
@@ -135,13 +144,13 @@ public extension Opus {
     
     private func encode(_ input: UnsafeBufferPointer<Float32>,
                         to output: UnsafeMutableBufferPointer<UInt8>,
-                        maxCompressedBytes: Int) throws -> Int {
+                        compressedSize: Int) throws -> Int {
       let encodedSize = opus_custom_encode_float(
         encoder,
         input.baseAddress!,
         frameSize,
         output.baseAddress!,
-        Int32(maxCompressedBytes)
+        Int32(compressedSize)
       )
       if encodedSize < 0 {
         throw Opus.Error(encodedSize)
