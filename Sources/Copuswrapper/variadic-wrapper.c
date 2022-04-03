@@ -2,10 +2,10 @@
 
 int opus_custom_encoder_ctl_wrapper(OpusCustomEncoder *OPUS_RESTRICT st, int request, opus_int32 val)
 {
-	opus_custom_encoder_ctl(st, request, val);
+	return opus_custom_encoder_ctl(st, request, val);
 }
 
 int opus_custom_decoder_ctl_wrapper(OpusCustomDecoder *OPUS_RESTRICT st, int request, opus_int32 val)
 {
-	opus_custom_decoder_ctl(st, request, val);
+	return opus_custom_decoder_ctl(st, request, val);
 }
