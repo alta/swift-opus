@@ -61,12 +61,9 @@ public extension Opus {
     /// - Parameter request The Opus CTL to change
     /// - Parameter value The value to set it to
     ///
-    /// - Returns Opus.Error code
-    public func encoderCtl(request: Int32, value: Int32) -> Opus.Error {
-      var error: Opus.Error = .ok
-      error.rawValue = opus_custom_encoder_ctl_wrapper(encoder,
-                                                       request, value)
-      return error
+    /// - Returns Opus.Error code raw type
+    public func encoderCtl(request: Int32, value: Int32) -> Opus.Error.RawValue {
+      return opus_custom_encoder_ctl_wrapper(encoder, request, value)
     }
     
     ///
