@@ -71,7 +71,7 @@ public extension Opus {
     ///
     public func encode(_ avData: AVAudioPCMBuffer,
                        compressedSize: Int) throws -> Data {
-      var compressed = Data(capacity: compressedSize)
+      var compressed = Data(repeating: 0, count: compressedSize)
       compressed.count = try compressed.withUnsafeMutableBytes(
         { try encode(avData, to: $0, compressedSize: compressedSize) }
       )
