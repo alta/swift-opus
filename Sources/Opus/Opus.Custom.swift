@@ -100,7 +100,7 @@ public extension Opus {
                         to output: UnsafeMutableBufferPointer<UInt8>,
                         compressedSize: Int) throws -> Int {
       guard input.format.sampleRate == format.sampleRate,
-              input.format.channelCount == format.channelCount else {
+            input.format.channelCount == format.channelCount else {
         throw Opus.Error.badArgument
       }
       
@@ -156,8 +156,12 @@ public extension Opus {
     }
     
     
-    
+    ///
+    /// Decode an opus packet
+    /// If the data is empty, it is treated as a dropped packet
+    /// The decoder needs the packet size to know what was dropped
     public func decode(_ data: Data,
+                       compressedPacketSize: Int32,
                        sampleMultiplier: Int32) throws -> AVAudioPCMBuffer {
       try data.withUnsafeBytes {
         let input = $0.bindMemory(to: UInt8.self)
@@ -165,14 +169,16 @@ public extension Opus {
         let output = AVAudioPCMBuffer(
           pcmFormat: format,
           frameCapacity: AVAudioFrameCount(frameSize * sampleMultiplier))!
-        try decode(input, to: output)
+        try decode(input, to: output, packetSize: compressedPacketSize)
         
         return output
       }
     }
     
     private func decode(_ input: UnsafeBufferPointer<UInt8>,
-                        to output: AVAudioPCMBuffer) throws {
+                        to output: AVAudioPCMBuffer,
+                        packetSize: Int32
+    ) throws {
       let decodedCount: Int
       
       switch output.format.commonFormat {
@@ -181,14 +187,14 @@ public extension Opus {
           start: output.int16ChannelData![0],
           count: Int(output.frameCapacity)
         )
-        decodedCount = try decode(input, to: output)
+        decodedCount = try decode(input, to: output, packetSize: packetSize)
         
       case .pcmFormatFloat32:
         let output = UnsafeMutableBufferPointer(
           start: output.floatChannelData![0],
           count: Int(output.frameCapacity)
         )
-        decodedCount = try decode(input, to: output)
+        decodedCount = try decode(input, to: output, packetSize: packetSize)
       default:
         throw Opus.Error.badArgument
       }
@@ -200,11 +206,12 @@ public extension Opus {
     }
     
     private func decode(_ input: UnsafeBufferPointer<UInt8>,
-                        to output: UnsafeMutableBufferPointer<Int16>) throws -> Int {
+                        to output: UnsafeMutableBufferPointer<Int16>,
+                        packetSize: Int32) throws -> Int {
       let decodedCount = opus_custom_decode(
         decoder,
-        input.baseAddress!,
-        Int32(input.count),
+        input.isEmpty ? nil : input.baseAddress,
+        packetSize,
         output.baseAddress!,
         Int32(output.count)
       )
@@ -213,13 +220,14 @@ public extension Opus {
       }
       return Int(decodedCount)
     }
-
+    
     private func decode(_ input: UnsafeBufferPointer<UInt8>,
-                        to output: UnsafeMutableBufferPointer<Float32>) throws -> Int {
+                        to output: UnsafeMutableBufferPointer<Float32>,
+                        packetSize: Int32) throws -> Int {
       let decodedCount = opus_custom_decode_float(
         decoder,
-        input.baseAddress!,
-        Int32(input.count),
+        input.isEmpty ? nil : input.baseAddress,
+        packetSize,
         output.baseAddress!,
         Int32(output.count)
       )
