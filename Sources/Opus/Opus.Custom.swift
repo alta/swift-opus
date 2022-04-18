@@ -9,7 +9,7 @@ public extension Opus {
   /// Implements a custom opus encoder / decoder.
   /// Custom implementations can have non-standard frame sizes
   ///
-  class Custom {
+  final class Custom {
     private let opusCustomMode: OpaquePointer
     let encoder: OpaquePointer
     let decoder: OpaquePointer
@@ -68,7 +68,9 @@ public extension Opus {
     
     ///
     /// Encode a PCM buffer to data using the custom mode configuration and max size
-    ///
+    /// - parameter avData Audio data to compress
+    /// - parameter compressedSize Opus packet size to compress to
+    /// - Returns Data containing the Opus packet
     public func encode(_ avData: AVAudioPCMBuffer,
                        compressedSize: Int) throws -> Data {
       var compressed = Data(repeating: 0, count: compressedSize)
@@ -159,11 +161,18 @@ public extension Opus {
     ///
     /// Decode an opus packet
     /// If the data is empty, it is treated as a dropped packet
-    /// The decoder needs the packet size to know what was dropped
+    /// - Parameter data Compressed data
+    /// - Parameter compressedPacketSize Number of bytes of data
+    /// - Parameter sampleMultiplier Frame size multiplier if greater than one
+    /// - Returns Uncompressed audio buffer
     public func decode(_ data: Data,
                        compressedPacketSize: Int32,
-                       sampleMultiplier: Int32) throws -> AVAudioPCMBuffer {
-      try data.withUnsafeBytes {
+                       sampleMultiplier: Int32 = 1) throws -> AVAudioPCMBuffer {
+      guard data.isEmpty || data.count == compressedPacketSize else {
+        throw Opus.Error.bufferTooSmall
+      }
+      
+      return try data.withUnsafeBytes {
         let input = $0.bindMemory(to: UInt8.self)
         
         let output = AVAudioPCMBuffer(
