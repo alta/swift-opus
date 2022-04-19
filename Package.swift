@@ -110,14 +110,14 @@ let package = Package(
 				.define("HAVE_UNISTD_H", to: "1"),
 			]
 		),
-    .target(
-      name: "Copuswrapper",
-      dependencies: ["Copus"],
-      publicHeadersPath: "include",
-      cSettings: [
-        .headerSearchPath(".")
-      ]
-    ),
+    		.target(
+			name: "Copuswrapper",
+			dependencies: ["Copus"],
+			publicHeadersPath: "include",
+			cSettings: [
+		        	.headerSearchPath(".")
+			]
+		),
 		.target(
 			name: "Opus",
 			dependencies: ["Copus", "Copuswrapper"]
