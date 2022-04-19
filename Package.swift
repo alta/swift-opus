@@ -31,9 +31,9 @@ let package = Package(
 			exclude: [
 				"AUTHORS",
 				"autogen.sh",
-				"celt/arm",
 				"celt_headers.mk",
 				"celt_sources.mk",
+				"celt/arm",
 				"celt/dump_modes",
 				"celt/meson.build",
 				"celt/opus_custom_demo.c",
@@ -91,7 +91,7 @@ let package = Package(
 				.headerSearchPath("silk"),
 				.headerSearchPath("silk/float"),
 
-        .define("OPUS_BUILD", to: "1"),
+				.define("OPUS_BUILD"),
 				.define("CUSTOM_MODES"),
 				.define("VAR_ARRAYS", to: "1"),
 				.define("FLOATING_POINT"), // Enable Opus floating-point mode
