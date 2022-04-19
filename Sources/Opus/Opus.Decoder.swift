@@ -7,20 +7,21 @@ public extension Opus {
 		let decoder: OpaquePointer
 
 		public init(format: AVAudioFormat,
-                application _: Application = .audio) throws {
+		            application _: Application = .audio) throws
+		{
 			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArgument
 			}
 
 			self.format = format
 
-      // Initialize Opus decoder
-      var error: Opus.Error = .ok
-      decoder = opus_decoder_create(Int32(format.sampleRate), Int32(format.channelCount), &error.rawValue)
-      if error != .ok {
-        throw error
-      }
-    }
+			// Initialize Opus decoder
+			var error: Opus.Error = .ok
+			decoder = opus_decoder_create(Int32(format.sampleRate), Int32(format.channelCount), &error.rawValue)
+			if error != .ok {
+				throw error
+			}
+		}
 
 		deinit {
 			opus_decoder_destroy(decoder)

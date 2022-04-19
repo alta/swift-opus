@@ -110,12 +110,12 @@ let package = Package(
 				.define("HAVE_UNISTD_H", to: "1"),
 			]
 		),
-    		.target(
+		.target(
 			name: "Copuswrapper",
 			dependencies: ["Copus"],
 			publicHeadersPath: "include",
 			cSettings: [
-		        	.headerSearchPath(".")
+				.headerSearchPath("."),
 			]
 		),
 		.target(
