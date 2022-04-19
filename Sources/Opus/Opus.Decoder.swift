@@ -7,8 +7,7 @@ public extension Opus {
 		let decoder: OpaquePointer
 
 		// TODO: throw an error if format is unsupported
-		public init(format: AVAudioFormat, application _: Application = .audio) throws
-		{
+		public init(format: AVAudioFormat, application _: Application = .audio) throws {
 			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArgument
 			}
