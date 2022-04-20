@@ -10,8 +10,8 @@ public extension Opus {
 	///
 	final class Custom {
 		private let opusCustomMode: OpaquePointer
-		let encoder: OpaquePointer
-		let decoder: OpaquePointer
+		let encoder: Opus.Encoder
+		let decoder: Opus.Decoder
 		private let format: AVAudioFormat
 		public let frameSize: Int32
 
@@ -36,26 +36,16 @@ public extension Opus {
 			opusCustomMode = customMode
 
 			// Create custom encoder
-			guard let opusEncoder = opus_custom_encoder_create(
-				customMode,
-				Int32(format.channelCount),
-				&error.rawValue
-			) else { throw error }
-
-			encoder = opusEncoder
-
+			encoder = try Opus.Encoder(customOpus: opusCustomMode,
+			                           format: format,
+			                           frameSize: frameSize)
 			// Create custom decoder
-			guard let opusDecoder = opus_custom_decoder_create(
-				customMode,
-				Int32(format.channelCount),
-				&error.rawValue
-			) else { throw error }
-			decoder = opusDecoder
+			decoder = try Opus.Decoder(customOpus: opusCustomMode,
+			                           format: format,
+			                           frameSize: frameSize)
 		}
 
 		deinit {
-			opus_encoder_destroy(encoder)
-			opus_decoder_destroy(decoder)
 			opus_custom_mode_destroy(opusCustomMode)
 		}
 
@@ -68,7 +58,7 @@ public extension Opus {
 		/// - Returns Opus.Error code
 		public func encoderCtl(request: Int32, value: Int32) -> Opus.Error {
 			Opus.Error(
-				rawValue: opus_custom_encoder_ctl_wrapper(encoder, request, value)
+				rawValue: opus_custom_encoder_ctl_wrapper(encoder.encoder, request, value)
 			)
 		}
 
@@ -78,100 +68,8 @@ public extension Opus {
 		/// - parameter compressedSize Opus packet size to compress to
 		/// - Returns Data containing the Opus packet
 		public func encode(_ avData: AVAudioPCMBuffer,
-		                   compressedSize: Int) throws -> Data
-		{
-			var compressed = Data(repeating: 0, count: compressedSize)
-			compressed.count = try compressed.withUnsafeMutableBytes(
-				{ try encode(avData, to: $0, compressedSize: compressedSize) }
-			)
-			return compressed
-		}
-
-		private func encode(_ input: AVAudioPCMBuffer,
-		                    to output: inout [UInt8],
-		                    compressedSize: Int) throws -> Int
-		{
-			try output.withUnsafeMutableBufferPointer {
-				try encode(input, to: $0, compressedSize: compressedSize)
-			}
-		}
-
-		private func encode(_ input: AVAudioPCMBuffer,
-		                    to output: UnsafeMutableRawBufferPointer,
-		                    compressedSize: Int) throws -> Int
-		{
-			let output = UnsafeMutableBufferPointer(
-				start: output.baseAddress!.bindMemory(
-					to: UInt8.self, capacity: output.count
-				),
-				count: output.count
-			)
-			return try encode(input, to: output, compressedSize: compressedSize)
-		}
-
-		private func encode(_ input: AVAudioPCMBuffer,
-		                    to output: UnsafeMutableBufferPointer<UInt8>,
-		                    compressedSize: Int) throws -> Int
-		{
-			guard input.format.sampleRate == format.sampleRate,
-			      input.format.channelCount == format.channelCount
-			else {
-				throw Opus.Error.badArgument
-			}
-
-			switch format.commonFormat {
-			case .pcmFormatInt16:
-				let input = UnsafeBufferPointer(
-					start: input.int16ChannelData![0],
-					count: Int(input.frameLength * format.channelCount)
-				)
-				return try encode(input, to: output, compressedSize: compressedSize)
-
-			case .pcmFormatFloat32:
-				let input = UnsafeBufferPointer(
-					start: input.floatChannelData![0],
-					count: Int(input.frameLength * format.channelCount)
-				)
-				return try encode(input, to: output, compressedSize: compressedSize)
-
-			default:
-				throw Opus.Error.badArgument
-			}
-		}
-
-		private func encode(_ input: UnsafeBufferPointer<Int16>,
-		                    to output: UnsafeMutableBufferPointer<UInt8>,
-		                    compressedSize: Int) throws -> Int
-		{
-			let encodedSize = opus_custom_encode(
-				encoder,
-				input.baseAddress!,
-				frameSize,
-				output.baseAddress!,
-				Int32(compressedSize)
-			)
-
-			if encodedSize < 0 {
-				throw Opus.Error(encodedSize)
-			}
-			return Int(encodedSize)
-		}
-
-		private func encode(_ input: UnsafeBufferPointer<Float32>,
-		                    to output: UnsafeMutableBufferPointer<UInt8>,
-		                    compressedSize: Int) throws -> Int
-		{
-			let encodedSize = opus_custom_encode_float(
-				encoder,
-				input.baseAddress!,
-				frameSize,
-				output.baseAddress!,
-				Int32(compressedSize)
-			)
-			if encodedSize < 0 {
-				throw Opus.Error(encodedSize)
-			}
-			return Int(encodedSize)
+		                   compressedSize: Int) throws -> Data {
+			return try encoder.encode(avData, compressedSize: compressedSize)
 		}
 
 		///
@@ -188,82 +86,9 @@ public extension Opus {
 			guard data.isEmpty || data.count == compressedPacketSize else {
 				throw Opus.Error.bufferTooSmall
 			}
-
-			return try data.withUnsafeBytes {
-				let input = $0.bindMemory(to: UInt8.self)
-
-				let output = AVAudioPCMBuffer(
-					pcmFormat: format,
-					frameCapacity: AVAudioFrameCount(frameSize * sampleMultiplier)
-				)!
-				try decode(input, to: output, packetSize: compressedPacketSize)
-
-				return output
-			}
-		}
-
-		private func decode(_ input: UnsafeBufferPointer<UInt8>,
-		                    to output: AVAudioPCMBuffer,
-		                    packetSize: Int32) throws
-		{
-			let decodedCount: Int
-
-			switch output.format.commonFormat {
-			case .pcmFormatInt16:
-				let output = UnsafeMutableBufferPointer(
-					start: output.int16ChannelData![0],
-					count: Int(output.frameCapacity)
-				)
-				decodedCount = try decode(input, to: output, packetSize: packetSize)
-
-			case .pcmFormatFloat32:
-				let output = UnsafeMutableBufferPointer(
-					start: output.floatChannelData![0],
-					count: Int(output.frameCapacity)
-				)
-				decodedCount = try decode(input, to: output, packetSize: packetSize)
-			default:
-				throw Opus.Error.badArgument
-			}
-
-			if decodedCount < 0 {
-				throw Opus.Error(decodedCount)
-			}
-			output.frameLength = AVAudioFrameCount(decodedCount)
-		}
-
-		private func decode(_ input: UnsafeBufferPointer<UInt8>,
-		                    to output: UnsafeMutableBufferPointer<Int16>,
-		                    packetSize: Int32) throws -> Int
-		{
-			let decodedCount = opus_custom_decode(
-				decoder,
-				input.isEmpty ? nil : input.baseAddress,
-				packetSize,
-				output.baseAddress!,
-				Int32(output.count)
-			)
-			if decodedCount < 0 {
-				throw Opus.Error(decodedCount)
-			}
-			return Int(decodedCount)
-		}
-
-		private func decode(_ input: UnsafeBufferPointer<UInt8>,
-		                    to output: UnsafeMutableBufferPointer<Float32>,
-		                    packetSize: Int32) throws -> Int
-		{
-			let decodedCount = opus_custom_decode_float(
-				decoder,
-				input.isEmpty ? nil : input.baseAddress,
-				packetSize,
-				output.baseAddress!,
-				Int32(output.count)
-			)
-			if decodedCount < 0 {
-				throw Opus.Error(decodedCount)
-			}
-			return Int(decodedCount)
+			return try decoder.decode(data,
+			                          compressedPacketSize: compressedPacketSize,
+			                          sampleMultiplier: sampleMultiplier)
 		}
 	}
 }
