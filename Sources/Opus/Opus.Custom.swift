@@ -68,8 +68,9 @@ public extension Opus {
 		/// - parameter compressedSize Opus packet size to compress to
 		/// - Returns Data containing the Opus packet
 		public func encode(_ avData: AVAudioPCMBuffer,
-		                   compressedSize: Int) throws -> Data {
-			return try encoder.encode(avData, compressedSize: compressedSize)
+		                   compressedSize: Int) throws -> Data
+		{
+			try encoder.encode(avData, compressedSize: compressedSize)
 		}
 
 		///

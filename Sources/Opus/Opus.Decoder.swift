@@ -34,12 +34,12 @@ public extension Opus {
 
 			self.format = format
 
-      // Initialize Opus decoder
-      var error: Opus.Error = .ok
-      decoder = opus_custom_decoder_create(customOpus,
-                                           Int32(format.channelCount),
-                                           &error.rawValue)
-      if error != .ok {
+			// Initialize Opus decoder
+			var error: Opus.Error = .ok
+			decoder = opus_custom_decoder_create(customOpus,
+			                                     Int32(format.channelCount),
+			                                     &error.rawValue)
+			if error != .ok {
 				throw error
 			}
 		}
