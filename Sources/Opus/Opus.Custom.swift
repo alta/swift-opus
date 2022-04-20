@@ -61,12 +61,15 @@ public extension Opus {
 
 		///
 		/// Wrapper onto the opus_custom_encoder_ctl function
+		/// https://www.opus-codec.org/docs/opus_api-1.3.1/group__opus__encoderctls.html
 		/// - Parameter request The Opus CTL to change
 		/// - Parameter value The value to set it to
 		///
-		/// - Returns Opus.Error code raw type
-		public func encoderCtl(request: Int32, value: Int32) -> Opus.Error.RawValue {
-			opus_custom_encoder_ctl_wrapper(encoder, request, value)
+		/// - Returns Opus.Error code
+		public func encoderCtl(request: Int32, value: Int32) -> Opus.Error {
+			Opus.Error(
+				rawValue: opus_custom_encoder_ctl_wrapper(encoder, request, value)
+			)
 		}
 
 		///
