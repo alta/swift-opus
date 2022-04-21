@@ -83,18 +83,18 @@ public extension Opus.Encoder {
 	}
 
 	func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8],
-	            compressedSize _: Int? = nil) throws -> Int
+	            compressedSize: Int? = nil) throws -> Int
 	{
 		try output.withUnsafeMutableBufferPointer {
-			try encode(input, to: $0)
+			try encode(input, to: $0, compressedSize: compressedSize)
 		}
 	}
 
 	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableRawBufferPointer,
-	            compressedSize _: Int? = nil) throws -> Int
+	            compressedSize: Int? = nil) throws -> Int
 	{
 		let output = UnsafeMutableBufferPointer(start: output.baseAddress!.bindMemory(to: UInt8.self, capacity: output.count), count: output.count)
-		return try encode(input, to: output)
+		return try encode(input, to: output, compressedSize: compressedSize)
 	}
 
 	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>,
