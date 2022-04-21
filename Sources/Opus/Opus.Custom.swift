@@ -38,7 +38,7 @@ public extension Opus {
 			// Create custom encoder
 			encoder = try Opus.Encoder(customOpus: opusCustomMode,
 			                           format: format,
-			                           frameSize: frameSize)
+			                           customFrameSize: frameSize)
 			// Create custom decoder
 			decoder = try Opus.Decoder(customOpus: opusCustomMode,
 			                           format: format,
