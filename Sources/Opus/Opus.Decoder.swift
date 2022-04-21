@@ -25,9 +25,9 @@ public extension Opus {
 
 		public init(customOpus: OpaquePointer,
 		            format: AVAudioFormat,
-		            frameSize: UInt32) throws
+		            customFrameSize: UInt32) throws
 		{
-			customFrameSize = Int32(frameSize)
+			self.customFrameSize = Int32(customFrameSize)
 			if !format.isValidOpusPCMFormat {
 				throw Opus.Error.badArgument
 			}
