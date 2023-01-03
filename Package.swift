@@ -90,7 +90,7 @@ let package = Package(
 				.headerSearchPath("celt/x86"),
 				.headerSearchPath("silk"),
 				.headerSearchPath("silk/float"),
-
+				.define("__OPTIMIZE__"),
 				.define("OPUS_BUILD"),
 				.define("CUSTOM_MODES"),
 				.define("VAR_ARRAYS", to: "1"),
