@@ -15,6 +15,10 @@ let package = Package(
 			targets: ["Copus"]
 		),
 		.library(
+			name: "Copuswrapper",
+			targets: ["Copuswrapper"]
+		),
+		.library(
 			name: "Opus",
 			targets: ["Opus", "Copus"]
 		),
@@ -86,8 +90,9 @@ let package = Package(
 				.headerSearchPath("celt/x86"),
 				.headerSearchPath("silk"),
 				.headerSearchPath("silk/float"),
-
+				.define("__OPTIMIZE__"),
 				.define("OPUS_BUILD"),
+				.define("CUSTOM_MODES"),
 				.define("VAR_ARRAYS", to: "1"),
 				.define("FLOATING_POINT"), // Enable Opus floating-point mode
 
@@ -106,8 +111,16 @@ let package = Package(
 			]
 		),
 		.target(
+			name: "Copuswrapper",
+			dependencies: ["Copus"],
+			publicHeadersPath: "include",
+			cSettings: [
+				.headerSearchPath("."),
+			]
+		),
+		.target(
 			name: "Opus",
-			dependencies: ["Copus"]
+			dependencies: ["Copus", "Copuswrapper"]
 		),
 		.testTarget(
 			name: "OpusTests",
