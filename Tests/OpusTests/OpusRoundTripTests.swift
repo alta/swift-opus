@@ -9,7 +9,7 @@ final class OpusRoundTripTests: XCTestCase {
 	func testSilence() throws {
 		let format = AVAudioFormat(opusPCMFormat: .float32, sampleRate: .opus48khz, channels: 1)!
 		let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: .opusMax)!
-		input.frameLength = input.frameCapacity // Silence
+		input.frameLength = input.frameCapacity  // Silence
 		_ = try encodeAndDecode(input)
 	}
 

@@ -1,8 +1,8 @@
 import AVFoundation
 import Copus
 
-public extension Opus {
-	class Decoder {
+extension Opus {
+	public class Decoder {
 		let format: AVAudioFormat
 		let decoder: OpaquePointer
 
@@ -37,8 +37,8 @@ public extension Opus {
 
 // MARK: Public decode methods
 
-public extension Opus.Decoder {
-	func decode(_ input: Data) throws -> AVAudioPCMBuffer {
+extension Opus.Decoder {
+	public func decode(_ input: Data) throws -> AVAudioPCMBuffer {
 		try input.withUnsafeBytes {
 			let input = $0.bindMemory(to: UInt8.self)
 			let sampleCount = opus_decoder_get_nb_samples(decoder, input.baseAddress!, Int32($0.count))
@@ -51,7 +51,7 @@ public extension Opus.Decoder {
 		}
 	}
 
-	func decode(_ input: UnsafeBufferPointer<UInt8>, to output: AVAudioPCMBuffer) throws {
+	public func decode(_ input: UnsafeBufferPointer<UInt8>, to output: AVAudioPCMBuffer) throws {
 		let decodedCount: Int
 		switch output.format.commonFormat {
 		case .pcmFormatInt16:

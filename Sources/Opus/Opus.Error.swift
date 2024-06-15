@@ -1,5 +1,5 @@
-public extension Opus {
-	struct Error: Swift.Error, Equatable, RawRepresentable, ExpressibleByIntegerLiteral {
+extension Opus {
+	public struct Error: Swift.Error, Equatable, RawRepresentable, ExpressibleByIntegerLiteral {
 		public typealias IntegerLiteralType = Int32
 		public var rawValue: IntegerLiteralType
 

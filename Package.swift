@@ -89,7 +89,7 @@ let package = Package(
 
 				.define("OPUS_BUILD"),
 				.define("VAR_ARRAYS", to: "1"),
-				.define("FLOATING_POINT"), // Enable Opus floating-point mode
+				.define("FLOATING_POINT"),  // Enable Opus floating-point mode
 
 				.define("HAVE_DLFCN_H", to: "1"),
 				.define("HAVE_INTTYPES_H", to: "1"),
