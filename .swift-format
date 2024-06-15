@@ -6,7 +6,7 @@
 	},
 	"tabWidth": 4,
 	"maximumBlankLines": 1,
-	"respectsExistingLineBreaks": false,
+	"respectsExistingLineBreaks": true,
 	"lineBreakBeforeControlFlowKeywords": true,
 	"lineBreakBeforeEachArgument": false,
 	"prioritizeKeepingFunctionOutputTogether": true
