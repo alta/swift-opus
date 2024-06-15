@@ -1,8 +1,8 @@
 import AVFoundation
 import Copus
 
-public extension Opus {
-	class Encoder {
+extension Opus {
+	public class Encoder {
 		let format: AVAudioFormat
 		let application: Application
 		let encoder: OpaquePointer
@@ -39,26 +39,26 @@ public extension Opus {
 
 // MARK: Public encode methods
 
-public extension Opus.Encoder {
-	func encode(_ input: AVAudioPCMBuffer, to output: inout Data) throws -> Int {
+extension Opus.Encoder {
+	public func encode(_ input: AVAudioPCMBuffer, to output: inout Data) throws -> Int {
 		output.count = try output.withUnsafeMutableBytes {
 			try encode(input, to: $0)
 		}
 		return output.count
 	}
 
-	func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8]) throws -> Int {
+	public func encode(_ input: AVAudioPCMBuffer, to output: inout [UInt8]) throws -> Int {
 		try output.withUnsafeMutableBufferPointer {
 			try encode(input, to: $0)
 		}
 	}
 
-	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableRawBufferPointer) throws -> Int {
+	public func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableRawBufferPointer) throws -> Int {
 		let output = UnsafeMutableBufferPointer(start: output.baseAddress!.bindMemory(to: UInt8.self, capacity: output.count), count: output.count)
 		return try encode(input, to: output)
 	}
 
-	func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
+	public func encode(_ input: AVAudioPCMBuffer, to output: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
 		guard input.format.sampleRate == format.sampleRate, input.format.channelCount == format.channelCount else {
 			throw Opus.Error.badArgument
 		}

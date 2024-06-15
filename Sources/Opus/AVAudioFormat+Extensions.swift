@@ -1,12 +1,12 @@
 import AVFoundation
 
-public extension AVAudioFormat {
-	enum OpusPCMFormat {
+extension AVAudioFormat {
+	public enum OpusPCMFormat {
 		case int16
 		case float32
 	}
 
-	convenience init?(opusPCMFormat: OpusPCMFormat, sampleRate: Double, channels: AVAudioChannelCount) {
+	public convenience init?(opusPCMFormat: OpusPCMFormat, sampleRate: Double, channels: AVAudioChannelCount) {
 		switch opusPCMFormat {
 		case .int16:
 			self.init(commonFormat: .pcmFormatInt16, sampleRate: sampleRate, channels: channels, interleaved: channels != 1)
@@ -18,7 +18,7 @@ public extension AVAudioFormat {
 		}
 	}
 
-	var isValidOpusPCMFormat: Bool {
+	public var isValidOpusPCMFormat: Bool {
 		switch sampleRate {
 		case .opus8khz, .opus12khz, .opus16khz, .opus24khz, .opus48khz:
 			break
