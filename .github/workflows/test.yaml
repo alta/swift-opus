@@ -1,4 +1,4 @@
-name: Swift
+name: Test
 
 on:
   push:
@@ -19,22 +19,18 @@ on:
       - "Sources/Copus"
 
 jobs:
-  format:
-    name: Format
-    runs-on: ubuntu-latest
+  test:
+    name: Test
+    runs-on: macos-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Install SwiftFormat
-        uses: Cyberbeni/install-swift-tool@v2
-        with:
-          url: https://github.com/apple/swift-format
+      - name: Test
+        run: swift test
 
-      - name: Format Swift code
-        run: swift-format -r -i ./
-
-      - name: Verify formatted code is unchanged
-        run: git diff --exit-code HEAD -w -G'(^[^# /])|(^#\w)|(^\s+[^#/])' # Ignore whitespace and comments
+      - name: Generate release build
+        run: swift build -c release
