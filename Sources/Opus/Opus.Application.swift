@@ -1,5 +1,5 @@
 extension Opus {
-	public struct Application: Equatable, RawRepresentable, ExpressibleByIntegerLiteral {
+	public struct Application: Equatable, RawRepresentable, ExpressibleByIntegerLiteral, Sendable {
 		public typealias IntegerLiteralType = Int32
 		public var rawValue: IntegerLiteralType
 
