@@ -35,6 +35,26 @@ extension Opus {
 			}
 		}
 	}
+
+	/// Sets the bitrate of the encoder
+	/// - Parameter bitrate: Bitrate in bits per second. Meaningful values range from 500 to 512000.
+	///   Special values: Use -1 for OPUS_BITRATE_MAX (maximum bitrate) or -1000 for OPUS_AUTO (automatic bitrate).
+	public func setBitrate(_ bitrate: Int32) throws {
+		let error = Opus.Error(opus_encoder_ctl(encoder, OPUS_SET_BITRATE_REQUEST, bitrate))
+		if error != .ok {
+			throw error
+		}
+	}
+
+	/// Sets the computational complexity of the encoder
+	/// - Parameter complexity: Complexity value from 0 to 10, where 0 is lowest complexity (fastest)
+	///   and 10 is highest complexity (best quality/compression). Default is typically 9-10.
+	public func setComplexity(_ complexity: Int32) throws {
+		let error = Opus.Error(opus_encoder_ctl(encoder, OPUS_SET_COMPLEXITY_REQUEST, complexity))
+		if error != .ok {
+			throw error
+		}
+	}
 }
 
 // MARK: Public encode methods
