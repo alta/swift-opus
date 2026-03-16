@@ -1,5 +1,7 @@
 import AVFoundation
+#if SWIFT_PACKAGE
 import Copus
+#endif
 
 extension Opus {
 	public class Encoder {
