@@ -1,0 +1,41 @@
+name: CocoaPods
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/cocoapods.yaml"
+      - ".gitmodules"
+      - "Opus.podspec"
+      - "Sources/Opus/**"
+      - "Sources/Copus"
+  pull_request:
+    paths:
+      - ".github/workflows/cocoapods.yaml"
+      - ".gitmodules"
+      - "Opus.podspec"
+      - "Sources/Opus/**"
+      - "Sources/Copus"
+
+jobs:
+  lint:
+    name: pod lib lint
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Install CocoaPods
+        run: gem install cocoapods
+
+      - name: Lint podspec
+        run: pod lib lint --allow-warnings --platforms=ios,macos --verbose
